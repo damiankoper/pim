@@ -6,4 +6,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="PreferenceActivity" parent="Theme.MaterialComponents.NoActionBar.Bridge">
+        <item name="android:colorAccent">@color/design_default_color_on_primary</item>
+    </style>
 </resources>

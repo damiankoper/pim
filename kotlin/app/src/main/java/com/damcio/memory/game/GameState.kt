@@ -11,7 +11,7 @@ import kotlin.concurrent.timerTask
 class GameState(
     private val cards: Int,
     private val context: Activity,
-    private val container: ViewGroup
+    container: ViewGroup
 ) : Observer {
     private var startDate: Date = Date();
     private var timer: Timer = Timer();

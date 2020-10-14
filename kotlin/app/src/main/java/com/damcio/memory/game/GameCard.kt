@@ -1,6 +1,7 @@
 package com.damcio.memory.game
 
 import android.content.Context
+import android.media.Image
 import android.text.Layout
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 import com.damcio.memory.R
 import java.util.*
 
@@ -15,7 +17,14 @@ class GameCard(
     private val context: Context,
     val number: Int
 ) : Observable() {
-    private val img = ImageView(context)
+
+    class GridElement(context:Context) : AppCompatImageView(context){
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            super.onMeasure(widthMeasureSpec, widthMeasureSpec)
+        }
+    }
+
+    private val img = GridElement(context)
     var pair: GameCard? = null
     val resMap = mapOf<Int, Int>(
         Pair(1, R.drawable.i001_rainy),
@@ -47,8 +56,8 @@ class GameCard(
 
     fun addToGroup(viewGroup: ViewGroup) {
         img.setImageResource(R.drawable.ic_baseline_image_24)
-        p.width = 24
-        p.height = 24
+        p.width=24
+        p.height=24
         viewGroup.addView(img, p)
     }
 

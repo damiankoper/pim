@@ -3,12 +3,19 @@
 
     <PreferenceCategory app:title="@string/game_options">
         <ListPreference
+            android:defaultValue="12"
             android:entries="@array/cards"
             android:entryValues="@array/cards"
+            android:icon="@drawable/ic_baseline_collections_24"
             android:key="cards"
-            android:title="@string/cards"
             android:summary="%s"
-            android:defaultValue="12"
-            android:icon="@drawable/ic_baseline_collections_24"/>
+            android:title="@string/cards" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:key="switch_preference_1"
+            android:title="Calm down, more to come..." />
+
     </PreferenceCategory>
+
 </PreferenceScreen>
