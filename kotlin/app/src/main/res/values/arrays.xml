@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="cards">
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+    </string-array>
+</resources>
