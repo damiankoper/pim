@@ -8,6 +8,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:memory/game/gameCard.dart';
 import 'package:preferences/preference_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Game extends StatefulWidget {
   @override
@@ -23,7 +24,9 @@ class _GameState extends State {
   int _counterAll = 0;
   DateTime _started;
   Timer _timer;
+  Timer _timerTap;
   List<GameCard> _gameCards = [];
+  List<GameCard> _clicked = [null, null];
 
   @override
   void initState() {
@@ -40,7 +43,8 @@ class _GameState extends State {
   }
 
   void initCards() {
-    _cards = int.parse(PrefService.sharedPreferences.getString('pref_cards'));
+    _cards = int.parse(
+        PrefService.sharedPreferences.getString('pref_cards') ?? "12");
     for (var i = 1; i <= _cards / 2; i++) {
       var card = GameCard(i);
       _gameCards.add(card);
@@ -51,7 +55,7 @@ class _GameState extends State {
       var pairCard = GameCard(card.number);
       card.pair = pairCard;
       pairCard.pair = card;
-      pairs.add(card);
+      pairs.add(pairCard);
     }
     _gameCards.addAll(pairs);
     _gameCards.shuffle();
@@ -61,6 +65,45 @@ class _GameState extends State {
   void dispose() {
     super.dispose();
     _timer.cancel();
+  }
+
+  void handleTap(GameCard card) {
+    if (_timerTap == null || !_timerTap.isActive) {
+      setState(() {
+        card.type = CardType.SHOWN;
+        if (_clicked[0] == null) {
+          _clicked[0] = card;
+        } else {
+          _clicked[1] = card;
+          _counterAll++;
+          _timerTap = Timer(new Duration(seconds: 1), () {
+            setState(() {
+              if (_clicked[0].pair == card) {
+                _counterHits++;
+                _clicked[0].type = CardType.REMOVED;
+                _clicked[1].type = CardType.REMOVED;
+              } else {
+                _clicked[0].type = CardType.HIDDEN;
+                _clicked[1].type = CardType.HIDDEN;
+              }
+              _clicked = [null, null];
+              if (_counterHits == _cards / 2) {
+                handleWin();
+              }
+            });
+          });
+        }
+      });
+    }
+  }
+
+  void handleWin() {
+    _timer.cancel();
+    Fluttertoast.showToast(
+      msg: "Nice! You scored $_counterHits/$_counterAll in ${getTimeString()}",
+      toastLength: Toast.LENGTH_LONG,
+    );
+    Navigator.pop(context);
   }
 
   @override
@@ -86,14 +129,30 @@ class _GameState extends State {
                 ],
               ),
               Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(16),
-                  child: GridView.count(
-                    crossAxisCount: 4,
-                    children: _gameCards
-                        .map((card) => Icon(Icons.mediation))
-                        .toList(),
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.all(16),
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              primary: true,
+                              crossAxisCount: 4,
+                              mainAxisSpacing: 4,
+                              crossAxisSpacing: 4,
+                              children: _gameCards
+                                  .map((card) => GameCardWidget(
+                                      card: card, onTap: handleTap))
+                                  .toList(),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
               )
             ],

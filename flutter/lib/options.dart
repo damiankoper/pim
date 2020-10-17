@@ -20,7 +20,7 @@ class Options extends StatelessWidget {
         DropdownPreference(
           'Cards',
           'cards',
-          defaultVal: '20',
+          defaultVal: '12',
           values: ['12', '16', '20'],
         ),
         SwitchPreference(
