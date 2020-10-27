@@ -67,7 +67,7 @@ class GameState(
     override fun update(o: Observable?, arg: Any?) {
         val clickedCard = o as GameCard
         if (clicked.first != null) {
-            if (clicked.second == null) {
+            if (clicked.second == null && clickedCard != clicked.first) {
                 clickedCard.show()
                 clicked = Pair<GameCard?, GameCard?>(clicked.first, clickedCard)
                 scoreTimer.schedule(timerTask {
